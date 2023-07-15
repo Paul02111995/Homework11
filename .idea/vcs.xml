@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Homework10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/homework9django" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Без названия" vcs="Git" />
   </component>
 </project>
