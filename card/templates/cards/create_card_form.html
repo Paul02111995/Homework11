@@ -1,0 +1,16 @@
+{% extends "cards/card_page.html" %}
+{% block create_card_form %}
+<form action="{% url 'create_card_form' %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>Create a New Card</h1></legend>
+        <input type="text" name="pan" placeholder="Card Number">
+        <input type="text" name="expiry_date" placeholder="Expiration Date">
+        <input type="text" name="cvv" placeholder="CVV">
+        <input type="text" name="issue_date" placeholder="Issue Date">
+        <input type="text" name="owner_id" placeholder="Owner ID">
+        <input type="text" name="status" placeholder="Status">
+    </fieldset>
+    <input type="submit" value="Create">
+</form>
+{% endblock %}

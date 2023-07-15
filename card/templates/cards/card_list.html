@@ -1,0 +1,35 @@
+{% extends "cards/card_page.html" %}
+
+{% block style %}
+table, th, td {border: 1px solid black;  border-collapse: collapse;}
+{% endblock %}
+
+{% block cards_list %}
+{% if cards %}
+<table>
+    <tr>
+        <th>Card Number</th>
+        <th>Expiration Date</th>
+        <th>CVV</th>
+        <th>Issue Date</th>
+        <th>Owner ID</th>
+        <th>Status</th>
+    </tr>
+    {% for card in cards %}
+    <tr>
+        <td>{{ card.pan }}</td>
+        <td>{{ card.expiry_date }}</td>
+        <td>{{ card.cvv }}</td>
+        <td>{{ card.issue_date }}</td>
+        <td>{{ card.owner_id }}</td>
+        <td>{{ card.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="{% url 'create_card_form' %}">Add New Card</a>
+
+{% else %}
+<p>There are no cards yet</p>
+{% endif %}
+{% endblock %}
