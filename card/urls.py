@@ -1,12 +1,13 @@
-from django.urls import path
-from .views import CardsView, create_card_view
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .card_viewset import CardViewSet
+
+router = DefaultRouter()
+router.register(r'card', CardViewSet)
 
 urlpatterns = [
-    path('cards/', CardsView.as_view(), name='card_list'),
-    path('cards/create/', create_card_view, name='create_card_form'),
+    path('', include(router.urls)),
+    path('card/drf-auth/', include('rest_framework.urls')),
+    path('card/<pk>/freeze/', CardViewSet.as_view({'post': 'freeze'})),
+    path('card/<pk>/unfreeze/', CardViewSet.as_view({'post': 'unfreeze'})),
 ]
-
-
-
-
-
