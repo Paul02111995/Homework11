@@ -25,15 +25,24 @@ class CardModelTests(TestCase):
             "cvv": "123",
             "issue_date": "2023-07-21",
             "status": "active",
-            "owner": self.user,
+            "owner": self.user.id,
         }
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        response = client.post('/card/', data, format='json')
 
-        card = Card.objects.create(**data)
-        self.assertEqual(Card.objects.count(), 1)
-        self.assertEqual(card.owner, self.user)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_list_cards(self):
-        data1 = {
+        card = Card.objects.get(id=response.data['id'])
+        self.assertEqual(card.pan, data['pan'])
+        self.assertEqual(card.expiry_date, data['expiry_date'])
+        self.assertEqual(card.cvv, data['cvv'])
+        self.assertEqual(str(card.issue_date), data['issue_date'])
+        self.assertEqual(card.status, data['status'])
+        self.assertEqual(card.owner_id, data['owner'])
+
+    def test_list_user_cards(self):
+        data = {
             "pan": "1111222233334444",
             "expiry_date": "12/25",
             "cvv": "123",
@@ -41,20 +50,23 @@ class CardModelTests(TestCase):
             "status": "active",
             "owner": self.user,
         }
-        data2 = {
-            "pan": "5555666677778888",
-            "expiry_date": "06/24",
-            "cvv": "456",
-            "issue_date": "2023-07-21",
-            "status": "active",
-            "owner": self.user,
-        }
-        Card.objects.create(**data1)
-        Card.objects.create(**data2)
+        Card.objects.create(**data)
 
-        user_cards = Card.objects.filter(owner=self.user)
+        client = APIClient()
+        client.force_authenticate(user=self.user)
 
-        self.assertEqual(user_cards.count(), 2)
+        response = client.get('/card/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        card_data = response.data[0]
+        self.assertEqual(card_data['owner'], self.user.id)
+        self.assertEqual(card_data['pan'], data['pan'])
+        self.assertEqual(card_data['expiry_date'], data['expiry_date'])
+        self.assertEqual(card_data['cvv'], data['cvv'])
+        self.assertEqual(card_data['issue_date'], data['issue_date'])
+        self.assertEqual(card_data['status'], data['status'])
 
     def test_retrieve_card(self):
         data = {
